@@ -76,6 +76,7 @@ struct BuilderContext
   gboolean        separate_locales;
   gboolean        bundle_sources;
   gboolean        sandboxed;
+  gboolean        bare;
   gboolean        rebuild_on_sdk_change;
   gboolean        use_rofiles;
   gboolean        have_rofiles;
@@ -707,6 +708,19 @@ gboolean
 builder_context_get_sandboxed (BuilderContext *self)
 {
   return self->sandboxed;
+}
+
+void
+builder_context_set_bare (BuilderContext *self,
+                          gboolean        bare)
+{
+  self->bare = bare;
+}
+
+gboolean
+builder_context_get_bare (BuilderContext *self)
+{
+  return self->bare;
 }
 
 gboolean

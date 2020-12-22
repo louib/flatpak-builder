@@ -57,6 +57,7 @@ static gboolean opt_delete_build_dirs;
 static gboolean opt_force_clean;
 static gboolean opt_allow_missing_runtimes;
 static gboolean opt_sandboxed;
+static gboolean opt_bare;
 static gboolean opt_rebuild_on_sdk_change;
 static gboolean opt_skip_if_unchanged;
 static gboolean opt_install;
@@ -124,6 +125,7 @@ static GOptionEntry entries[] = {
   { "gpg-homedir", 0, 0, G_OPTION_ARG_STRING, &opt_gpg_homedir, "GPG Homedir to use when looking for keyrings", "HOMEDIR"},
   { "force-clean", 0, 0, G_OPTION_ARG_NONE, &opt_force_clean, "Erase previous contents of DIRECTORY", NULL },
   { "sandbox", 0, 0, G_OPTION_ARG_NONE, &opt_sandboxed, "Enforce sandboxing, disabling build-args", NULL },
+  { "bare", 0, 0, G_OPTION_ARG_NONE, &opt_bare, "Build on the bare host system", NULL },
   { "stop-at", 0, 0, G_OPTION_ARG_STRING, &opt_stop_at, "Stop building at this module (implies --build-only)", "MODULENAME"},
   { "jobs", 0, 0, G_OPTION_ARG_INT, &opt_jobs, "Number of parallel jobs to build (default=NCPU)", "JOBS"},
   { "rebuild-on-sdk-change", 0, 0, G_OPTION_ARG_NONE, &opt_rebuild_on_sdk_change, "Rebuild if sdk changes", NULL },
@@ -532,6 +534,7 @@ main (int    argc,
   builder_context_set_keep_build_dirs (build_context, opt_keep_build_dirs);
   builder_context_set_delete_build_dirs (build_context, opt_delete_build_dirs);
   builder_context_set_sandboxed (build_context, opt_sandboxed);
+  builder_context_set_bare (build_context, opt_bare);
   builder_context_set_jobs (build_context, opt_jobs);
   builder_context_set_rebuild_on_sdk_change (build_context, opt_rebuild_on_sdk_change);
   builder_context_set_bundle_sources (build_context, opt_bundle_sources);

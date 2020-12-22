@@ -94,6 +94,9 @@ gboolean        builder_context_get_keep_build_dirs (BuilderContext *self);
 void            builder_context_set_sandboxed (BuilderContext *self,
                                                gboolean        sandboxed);
 gboolean        builder_context_get_sandboxed (BuilderContext *self);
+void            builder_context_set_bare (BuilderContext *self,
+                                          gboolean        bare);
+gboolean        builder_context_get_bare (BuilderContext *self);
 void            builder_context_set_global_cleanup (BuilderContext *self,
                                                     const char    **cleanup);
 const char **   builder_context_get_global_cleanup (BuilderContext *self);
