@@ -1266,8 +1266,7 @@ build (GFile          *app_dir,
   g_autoptr(GFile) cwd_file = NULL;
   g_autoptr(GPtrArray) args = NULL;
 
-  // FIXME at some point it will be if (context->bare)
-  if (1 + 1 == 2)
+  if (builder_context_get_bare(context))
     {
       if (chdir (flatpak_file_get_path_cached (source_dir)))
         {
