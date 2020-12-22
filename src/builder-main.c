@@ -873,7 +873,7 @@ main (int    argc,
 
   if (!opt_finish_only && !opt_export_only)
     {
-      if (!builder_context_get_bare(build_context) && !builder_cache_lookup (cache, "init"))
+      if (!opt_bare && !builder_cache_lookup (cache, "init"))
         {
           g_autofree char *body =
             g_strdup_printf ("Initialized %s\n",
