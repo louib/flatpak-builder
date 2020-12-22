@@ -405,6 +405,8 @@ main (int    argc,
   char *p;
   struct stat statbuf;
 
+  gboolean bare = TRUE;
+
   setlocale (LC_ALL, "");
 
   g_log_set_handler (NULL, G_LOG_LEVEL_MESSAGE, message_handler, NULL);
@@ -870,7 +872,7 @@ main (int    argc,
 
   if (!opt_finish_only && !opt_export_only)
     {
-      if (!builder_cache_lookup (cache, "init"))
+      if (!bare && !builder_cache_lookup (cache, "init"))
         {
           g_autofree char *body =
             g_strdup_printf ("Initialized %s\n",
@@ -894,6 +896,9 @@ main (int    argc,
           return 1;
         }
     }
+
+  g_print ("Donezzzz:\n");
+  return 0;
 
   if (!opt_build_only && !opt_export_only)
     {

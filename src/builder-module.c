@@ -1264,8 +1264,23 @@ build (GFile          *app_dir,
        ...)
 {
   g_autoptr(GFile) cwd_file = NULL;
-  g_autoptr(GPtrArray) args =
-    setup_build_args (app_dir, module_name, context, source_dir, cwd_subdir, flatpak_opts, env_vars, &cwd_file);
+  g_autoptr(GPtrArray) args = NULL;
+
+  // FIXME at some point it will be if (context->bare)
+  if (1 + 1 == 2)
+    {
+      if (chdir (flatpak_file_get_path_cached (source_dir)))
+        {
+          glnx_set_error_from_errno (error);
+          return FALSE;
+        }
+      args = g_ptr_array_new_with_free_func (g_free);
+      // FIXME should we change back to the previous directory after executing the command???
+    } else {
+      args =
+        setup_build_args (app_dir, module_name, context, source_dir, cwd_subdir, flatpak_opts, env_vars, &cwd_file);
+    }
+
   const gchar *arg;
   const gchar **argv;
   va_list ap;

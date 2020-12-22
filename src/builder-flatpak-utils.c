@@ -306,7 +306,7 @@ flatpak_is_in_sandbox (void)
         new_in_sandbox = 1;
 
       g_once_init_leave (&in_sandbox, new_in_sandbox);
- }
+    }
 
   return in_sandbox == 1;
 }
