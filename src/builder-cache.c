@@ -593,14 +593,16 @@ builder_cache_commit (BuilderCache *self,
   g_autoptr(GVariant) changesvz = NULL;
   g_autoptr(GVariant) removalsvz = NULL;
 
-  g_print ("Committing stage %s to cache\n", self->stage);
+  g_print ("Committing stage %s to cache dir %s\n", self->stage);
 
   /* We set all mtimes to 0 during a commit, to simulate what would happen when
      running via flatpak deploy (and also if we checked out from the cache). */
+  g_print ("602");
   if (!flatpak_zero_mtime (AT_FDCWD, flatpak_file_get_path_cached (self->app_dir),
                            NULL, NULL))
     return FALSE;
 
+  g_print ("606");
   if (!ostree_repo_prepare_transaction (self->repo, NULL, NULL, error))
     return FALSE;
 
@@ -611,10 +613,12 @@ builder_cache_commit (BuilderCache *self,
   if (self->devino_to_csum_cache)
     ostree_repo_commit_modifier_set_devino_cache (modifier, self->devino_to_csum_cache);
 
+  g_print ("618");
   if (!ostree_repo_write_directory_to_mtree (self->repo, self->app_dir,
                                              mtree, modifier, NULL, error))
     goto out;
 
+  g_print ("622");
   if (!ostree_repo_write_mtree (self->repo, mtree, &root, NULL, error))
     goto out;
 
@@ -634,6 +638,7 @@ builder_cache_commit (BuilderCache *self,
 
   current = self->current_checksum;
 
+  g_print ("644");
   if (!ostree_repo_write_commit (self->repo, self->last_parent, current, body, metadata,
                                  OSTREE_REPO_FILE (root),
                                  &commit_checksum, NULL, error))
@@ -642,25 +647,31 @@ builder_cache_commit (BuilderCache *self,
   ref = builder_cache_get_current_ref (self);
   ostree_repo_transaction_set_ref (self->repo, NULL, ref, commit_checksum);
 
+  g_print ("652");
   if (self->last_parent &&
       !ostree_repo_read_commit (self->repo, self->last_parent, &last_root, NULL, NULL, error))
     goto out;
 
+  g_print ("656");
   if (!mtree_prune_old_files (mtree, OSTREE_REPO_FILE (last_root), error))
     goto out;
 
+  g_print ("660");
   if (!ostree_repo_write_mtree (self->repo, mtree, &new_root, NULL, error))
     goto out;
 
+  g_print ("666");
   if (!ostree_repo_write_commit (self->repo, NULL, current, body, metadata,
                                  OSTREE_REPO_FILE (new_root),
                                  &new_commit_checksum, NULL, error))
     goto out;
 
+  g_print ("670");
   if (!ostree_repo_commit_transaction (self->repo, NULL, NULL, error))
     goto out;
 
   /* Check out the just commited cache so we hardlinks to the cache */
+  g_print ("676");
   if (builder_context_get_use_rofiles (self->context) &&
       !builder_cache_checkout (self, new_commit_checksum, FALSE, error))
     goto out;

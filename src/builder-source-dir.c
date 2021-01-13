@@ -262,6 +262,7 @@ builder_source_dir_checksum (BuilderSource  *source,
                               BuilderCache   *cache,
                               BuilderContext *context)
 {
+  // It's happening here.
   /* We can't realistically checksum a directory, so always rebuild */
   builder_cache_checksum_random (cache);
 }

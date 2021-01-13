@@ -36,6 +36,8 @@ typedef struct BuilderModule BuilderModule;
 
 /* Bump this if format changes in incompatible ways to force rebuild */
 #define BUILDER_MODULE_CHECKSUM_VERSION "1"
+/* Name of the build directory used for building the modules */
+#define BUILDER_MODULE_BUILD_DIR_PATH "_flatpak_build"
 
 GType builder_module_get_type (void);
 

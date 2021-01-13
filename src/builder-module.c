@@ -1590,15 +1590,22 @@ builder_module_build_helper (BuilderModule  *self,
       if (use_builddir)
         {
           if (source_subdir_relative)
-            build_dir_relative = g_build_filename (source_subdir_relative, "_flatpak_build", NULL);
+            build_dir_relative = g_build_filename (source_subdir_relative, BUILDER_MODULE_BUILD_DIR_PATH, NULL);
           else
-            build_dir_relative = g_strdup ("_flatpak_build");
-          build_dir = g_file_get_child (source_subdir, "_flatpak_build");
+            build_dir_relative = g_strdup (BUILDER_MODULE_BUILD_DIR_PATH);
+          build_dir = g_file_get_child (source_subdir, BUILDER_MODULE_BUILD_DIR_PATH);
 
           if (!g_file_make_directory (build_dir, NULL, error))
             {
-              g_prefix_error (error, "module %s: ", self->name);
-              return FALSE;
+
+              // FIXME use context->get_keep_existing_dir instead of false!!
+            // if (!g_error_matches (*error, G_IO_ERROR, G_IO_ERROR_EXISTS) && FALSE)
+            if (FALSE)
+              {
+                g_prefix_error (error, "module %s: ", self->name);
+                return FALSE;
+              }
+
             }
 
           if (cmake || cmake_ninja)
@@ -1888,6 +1895,9 @@ builder_module_build (BuilderModule  *self,
       g_prefix_error (error, "module %s: ", self->name);
       return FALSE;
     }
+  // TODO write a new function that fetches the LAST build dir in case of
+  // --reuse-build-dirs
+  g_debug ("Building module using source directory %s", g_file_get_path (source_dir));
 
   build_parent_dir = g_file_get_parent (source_dir);
   buildname = g_file_get_basename (source_dir);
@@ -1905,7 +1915,8 @@ builder_module_build (BuilderModule  *self,
 
   if (!g_file_make_symbolic_link (build_link,
                                   buildname,
-                                  NULL, error))
+                                  NULL,
+                                  error))
     {
       g_prefix_error (error, "module %s: ", self->name);
       return FALSE;

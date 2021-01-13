@@ -529,8 +529,12 @@ builder_context_allocate_build_subdir (BuilderContext *self,
               g_propagate_error (error, g_steal_pointer (&my_error));
               return NULL;
             }
+          // if context->get_reuse_build_dirs
+          if (TRUE) {
+              return g_steal_pointer (&subdir);
+          }
           g_clear_error (&my_error);
-          /* Already exists, try again */
+          /* The build directory already exists, use another one */
         }
     }
 
